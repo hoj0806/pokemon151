@@ -1,9 +1,13 @@
 import "./App.css";
+import Navbar from "./components/Navbar/Navbar";
+import PokemonBox from "./components/PokemonBox/PokemonBox";
 
 function App() {
   return (
     <div className='App'>
-      <header className='navbar'>asd</header>
+      <Navbar />
+      <PokemonBox />
+      <PokemonBox />
     </div>
   );
 }

@@ -1,0 +1,6 @@
+.navbar {
+  height: 7rem;
+  background-color: rgb(83, 106, 237);
+  border-radius: 10px;
+  grid-column: 1 / -1;
+}

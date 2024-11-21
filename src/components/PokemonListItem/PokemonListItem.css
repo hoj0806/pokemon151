@@ -1,0 +1,13 @@
+.pokemon-list-item {
+  list-style: none;
+  width: 100%;
+  background-color: rgb(57, 214, 214);
+  border-radius: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.pokemon-name {
+  font-size: 2rem;
+}

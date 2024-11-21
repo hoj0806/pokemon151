@@ -7,39 +7,69 @@ import PokemonList from "./components/PokemonList/PokemonList";
 function App() {
   const [pokemonData, setPokemonData] = useState([]);
 
+  const [query, setQuery] = useState("");
+
   const fetchAllPokemonData = async () => {
-    const allPokemonData = [];
-    for (let i = 1; i <= 40; i++) {
-      // image Reponse
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`);
-      const data = await response.json();
-      const frontSpriteImage = data.sprites.front_default;
+    setQuery("");
 
-      // name Response
-      const speciesResponse = await fetch(
-        `https://pokeapi.co/api/v2/pokemon-species/${i}`
+    const fetchPokemon = (id) =>
+      fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then((res) =>
+        res.json()
       );
-      const speciesData = await speciesResponse.json();
 
-      const koreanName = speciesData.names.find(
+    const fetchPokemonSpecies = (id) =>
+      fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then((res) =>
+        res.json()
+      );
+
+    // 1~151까지의 배열 생성
+    const ids = Array.from({ length: 151 }, (_, index) => index + 1);
+
+    // 데이터 병렬요청
+    const pokemonPromises = ids.map((id) => fetchPokemon(id));
+    const speciesPromises = ids.map((id) => fetchPokemonSpecies(id));
+
+    const allPokemonResponses = await Promise.all(pokemonPromises);
+    const allSpeciesResponses = await Promise.all(speciesPromises);
+
+    // 데이터 결합
+    const allPokemonData = allPokemonResponses.map((pokemon, index) => {
+      const species = allSpeciesResponses[index];
+      const koreanName = species.names.find(
         (el) => el.language.name === "ko"
       ).name;
-      allPokemonData.push({
-        imageUrl: frontSpriteImage,
+
+      return {
+        imageUrl: pokemon.sprites.front_default,
         name: koreanName,
-        id: speciesData.id,
-      });
-    }
+        id: species.id,
+      };
+    });
+
     setPokemonData(allPokemonData);
   };
 
+  const handleChange = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const handleClickSearchPokemon = () => {
+    setPokemonData((data) =>
+      data.filter((pokemon) => pokemon.name.includes(query))
+    );
+  };
   useEffect(() => {
     fetchAllPokemonData();
   }, []);
 
   return (
     <div className='App'>
-      <Navbar />
+      <Navbar
+        query={query}
+        onChange={handleChange}
+        onClickSearchPokemon={handleClickSearchPokemon}
+        onFetchAllPokemonData={fetchAllPokemonData}
+      />
       <PokemonBox>
         <PokemonList pokemonData={pokemonData} />
       </PokemonBox>

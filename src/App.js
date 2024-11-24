@@ -6,8 +6,8 @@ import PokemonList from "./components/PokemonList/PokemonList";
 
 function App() {
   const [pokemonData, setPokemonData] = useState([]);
-
   const [query, setQuery] = useState("");
+  const [selectedId, setSelectedId] = useState(null);
 
   const fetchAllPokemonData = async () => {
     setQuery("");
@@ -58,6 +58,11 @@ function App() {
       data.filter((pokemon) => pokemon.name.includes(query))
     );
   };
+
+  const handleSelectId = (id) => {
+    setSelectedId(id);
+  };
+
   useEffect(() => {
     fetchAllPokemonData();
   }, []);
@@ -71,7 +76,11 @@ function App() {
         onFetchAllPokemonData={fetchAllPokemonData}
       />
       <PokemonBox>
-        <PokemonList pokemonData={pokemonData} />
+        <PokemonList
+          pokemonData={pokemonData}
+          onSelectId={handleSelectId}
+          selectedId={selectedId}
+        />
       </PokemonBox>
       <PokemonBox />
     </div>

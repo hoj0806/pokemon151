@@ -3,6 +3,7 @@ import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import PokemonBox from "./components/PokemonBox/PokemonBox";
 import PokemonList from "./components/PokemonList/PokemonList";
+import PokemonDetail from "./components/PokemonDetail/PokemonDetail";
 
 function App() {
   const [pokemonData, setPokemonData] = useState([]);
@@ -82,7 +83,13 @@ function App() {
           selectedId={selectedId}
         />
       </PokemonBox>
-      <PokemonBox />
+      <PokemonBox>
+        {selectedId ? (
+          <PokemonDetail selectedId={selectedId} />
+        ) : (
+          <div>포켓몬을 선택해주세요</div>
+        )}
+      </PokemonBox>
     </div>
   );
 }
